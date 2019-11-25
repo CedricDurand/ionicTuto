@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Platform } from '@ionic/angular';
+
+
 @Component({
   selector: 'app-gps',
   templateUrl: './gps.component.html',
@@ -7,8 +11,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GpsComponent implements OnInit {
 
-  constructor() { }
+  private latitude : any;
+  private longitude : any;
 
-  ngOnInit() {}
+  constructor(private geolocation: Geolocation, private platform: Platform) {
+    this.platform.ready().then(()=>{
+      this.rafraichir();
+    });
+  }
+
+  ngOnInit() {
+
+  }
+
+  rafraichir(){
+
+    var option = { enableHighAccuracy: true };
+
+    this.geolocation.getCurrentPosition(option).then(data=>{
+      this.longitude = data.coords.longitude;
+      this.latitude = data.coords.latitude;
+    }).catch((error) => {
+       console.log('Getting location error !', error);
+     });
+  }
 
 }
